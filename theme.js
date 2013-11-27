@@ -41,7 +41,7 @@ function Theme(name) {
             lastArgumentIndex = argumentsLength - 1; 
         
 
-        if (typeof arguments[lastArgumentIndex] === 'object') {
+        if (typeof arguments[lastArgumentIndex] === 'object' && !(arguments[lastArgumentIndex] instanceof Array)) {
             options = arguments[lastArgumentIndex];
             delete arguments[lastArgumentIndex];
             argumentsLength = argumentsLength - 1;
@@ -114,6 +114,71 @@ function Theme(name) {
         return this;
     };
 
+    this.js = function () {
+        var i, query = {}, external = false;
+        var options = {
+            q: false,
+            external: false
+        };
+         var argumentsLength = arguments.length,
+            lastArgumentIndex = argumentsLength - 1; 
+        
+        console.log(arguments);
+
+        if (typeof arguments[lastArgumentIndex] === 'object' && !(arguments[lastArgumentIndex] instanceof Array)) {
+            options = arguments[lastArgumentIndex];
+            delete arguments[lastArgumentIndex];
+            argumentsLength = argumentsLength - 1;
+        }
+
+        if (argumentsLength > 1) {
+            for (i in arguments) {
+                if (arguments.hasOwnProperty(i)) {
+                    if (typeof arguments[i] !== 'undefined') {
+                        if (arguments[i].trim().match(urlRegExp)) {
+                            external = true;
+                        } else {
+                            external = false;
+                        }
+                        _js.push({
+                            name: arguments[i].trim(), 
+                            external: external,
+                            query: query
+                        });
+                    }
+                }
+            }
+        } else {
+            var scripts = arguments[0];
+            
+            console.log(scripts instanceof Array);
+            console.log(scripts);
+            if (scripts instanceof Array) {
+                /* it's array */
+            } else {
+                scripts = scripts.split(',');
+            }
+
+            for (i in scripts) {
+                if (scripts.hasOwnProperty(i)) {
+                    if (typeof scripts[i] !== 'undefined') {
+                        if (scripts[i].trim().match(urlRegExp)) {
+                            external = true;
+                        } else {
+                            external = false;
+                        }
+                        _js.push({
+                            name: scripts[i].trim(), 
+                            external: external,
+                            query: query
+                        });
+                    }
+                }
+            }
+        }
+        return this;
+    };
+
     this.title = function (title) {
         _data.title = title;
         return this;
@@ -164,7 +229,28 @@ function Theme(name) {
                 if (query !== '') {
                     href = href + '?' + query;
                 }
-                _data.stylesheet += '<link rel="' + alternate + 'stylesheet" ' + media + 'href="'+ href +'" />\n';
+                _data.stylesheet += '<link rel="' + alternate + 'stylesheet" ' + media + 'href="'+ href +'" />\n  ';
+            }
+        }
+    };
+
+    var renderJavascript = function () {
+        var i;
+        for (i in _js) {
+            if (_js.hasOwnProperty(i)) {
+                var js = _js[i], href, query;
+                
+                if (js.external === false) {
+                    href = "/" + name + '/js/' + js.name + '.js';
+                } else {
+                    href = js.name;
+                }
+
+                query = querystring.stringify(js.query).replace(/^\=+|\=+$/g, '');
+                if (query !== '') {
+                    href = href + '?' + query;
+                }
+                _data.javascript += '<script href="'+ href +'"></script>\n  ';
             }
         }
     };
@@ -172,6 +258,7 @@ function Theme(name) {
     this.load = function (template) {
         var that = this;
         renderStylesheet();
+        renderJavascript();
         if (typeof template === 'undefined') {
             template = 'index';
         }
