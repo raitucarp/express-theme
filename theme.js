@@ -122,8 +122,6 @@ function Theme(name) {
         };
          var argumentsLength = arguments.length,
             lastArgumentIndex = argumentsLength - 1; 
-        
-        console.log(arguments);
 
         if (typeof arguments[lastArgumentIndex] === 'object' && !(arguments[lastArgumentIndex] instanceof Array)) {
             options = arguments[lastArgumentIndex];
@@ -150,9 +148,6 @@ function Theme(name) {
             }
         } else {
             var scripts = arguments[0];
-            
-            console.log(scripts instanceof Array);
-            console.log(scripts);
             if (scripts instanceof Array) {
                 /* it's array */
             } else {
@@ -186,8 +181,12 @@ function Theme(name) {
 
     this.data = function () {
         if (arguments.length === 2) {
-            var name = arguments[0],
-                value = arguments[1];
+            var name = arguments[0], value = arguments[1];
+
+            if (typeof value === 'function') {
+                value = (function () { return value(); } )();
+            }
+
             _data[name] = value;
         } else {
             var obj = arguments[0];
