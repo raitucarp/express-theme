@@ -20,5 +20,6 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/raitucarp/express-theme/issues"
-  }
+  },
+  "dependencies": {}
 }
