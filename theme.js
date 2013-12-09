@@ -8,7 +8,7 @@ function Theme(name) {
         urlRegExp = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i;
 
     /* social media meta*/
-    var _og = [], _twitter_cards, _googlePlus;
+    var _og = [], _twitter_cards = {}, _googlePlus;
 
     /* mediaType for stylesheets */
     var mediaType = ['all', 'braille', 'embossed', 'handheld', 'print', 'projection', 'screen', 'speech', 'tty', 'tv'];
@@ -218,16 +218,100 @@ function Theme(name) {
     };
 
     this.opengraph = function () {
-        if (arguments.length === 2) {
+        if (arguments.length === 2 || arguments.length === 3) {
             var property = arguments[0], content = arguments[1];
-
-            _meta.push({property: 'og:'+property, content: content});
+            if (property === 'namespace') {
+                var ns = 'http://ogp.me/ns';
+                var og = 'og: ';
+                    switch (arguments[1]) {
+                        case 'music': 
+                            ns += '/music#';
+                        break;
+                        case 'video':
+                            ns += '/video#';
+                        break;
+                        case 'article':
+                            ns += '/article#';
+                        break;
+                        case 'book':
+                            ns += '/book#';
+                        break;
+                        case 'profile':
+                            ns += '/profile#';
+                        break;
+                        case 'custom': 
+                            og = arguments[2].namespace + ': ';
+                            ns = arguments[2].url + '/ns#';
+                        break;
+                        default:
+                            ns += '#';
+                        break;
+                    }
+                _data.og_namespace = 'prefix="' + og + ns + '"';
+            } else {
+                _meta.push({property: 'og:'+property, content: content});
+                var options = arguments[2];
+                if (arguments.length === 3) {
+                    for (var i in options) {
+                        if (options.hasOwnProperty(i)) {
+                            _meta.push({property: 'og:'+property+':'+i, content: options[i]});
+                        }
+                    }
+                }
+            }
         }
         return this;
     };
 
     this.twitter_cards = function () {
+        if (arguments.length === 2) {
+            var type = arguments[0], 
+                options = arguments[1];
 
+            if (typeof options.site === 'undefined') {
+                throw new Error('No site');
+            }
+
+            var site = options.site.replace('@', '');
+
+            switch (type) {
+                case 'summary':
+                    _twitter_cards = {
+                        card: type,
+                        site: '@' + site,
+                        creator: '@' + options.creator.replace('@', ''),
+                        title: options.title,
+                        description: options.description
+                    };
+                break;
+                case 'summary_large_image':
+                    _twitter_cards = {
+                        card: type,
+                        site: '@' + site,
+                        creator: '@' + options.creator.replace('@', ''),
+                        title: options.title,
+                        description: options.description,
+                        'img.src' : options.img_src
+                    };
+                break;
+                case 'photo':
+                    
+                break;
+                case 'gallery':
+
+                break;
+                case 'app':
+
+                break;
+                case 'player':
+
+                break;
+                case 'product':
+
+                break;
+            }
+        }
+        return this;
     };
 
     this.status = function (number) {
