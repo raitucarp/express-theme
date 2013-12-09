@@ -4,8 +4,12 @@ var path = require('path'),
 
 function Theme(name) {
     /* define all important vars */
-    var _name = name, _css = [], _js = [], _title, _status,
+    var _name = name, _css = [], _js = [], _meta = [], _title, _status = 200,
         urlRegExp = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i;
+
+    /* social media meta*/
+    var _og = [], _twitter_cards, _googlePlus;
+
     /* mediaType for stylesheets */
     var mediaType = ['all', 'braille', 'embossed', 'handheld', 'print', 'projection', 'screen', 'speech', 'tty', 'tv'];
     /* create empty _data for theme */
@@ -200,6 +204,32 @@ function Theme(name) {
         return this;
     };
 
+    this.meta = function () {
+        if (arguments.length === 1) {
+            if (Object.prototype.toString.call( arguments[0] ) === "[object Object]") {
+                _meta.push(arguments[0]);
+            }
+        } else {
+            if (typeof arguments[0] === 'string' && typeof arguments[1] === 'string') {
+                _meta.push({name: arguments[0], content: arguments[1] });
+            }
+        }
+        return this;
+    };
+
+    this.opengraph = function () {
+        if (arguments.length === 2) {
+            var property = arguments[0], content = arguments[1];
+
+            _meta.push({property: 'og:'+property, content: content});
+        }
+        return this;
+    };
+
+    this.twitter_cards = function () {
+
+    };
+
     this.status = function (number) {
         _status = number;
         return this;
@@ -228,7 +258,7 @@ function Theme(name) {
                 if (query !== '') {
                     href = href + '?' + query;
                 }
-                _data.stylesheet += '<link rel="' + alternate + 'stylesheet" ' + media + 'href="'+ href +'" />\n  ';
+                _data.stylesheet += '<link rel="' + alternate + 'stylesheet" ' + media + 'href="'+ href +'" />\n';
             }
         }
     };
@@ -249,19 +279,33 @@ function Theme(name) {
                 if (query !== '') {
                     href = href + '?' + query;
                 }
-                _data.javascript += '<script href="'+ href +'"></script>\n  ';
+                _data.javascript += '<script href="'+ href +'"></script>\n';
             }
         }
+    };
+
+    var renderMeta = function () {
+        _meta.forEach(function (meta, index) {
+            var attrs = '';
+            for (var i in meta) {
+                console.log(i);
+                if (meta.hasOwnProperty(i)) {
+                    attrs += i + '="' + meta[i].toString() + '" ';
+                }
+            }
+            _data.meta += '<meta '+attrs+'/>\n';
+        });
     };
 
     this.load = function (template) {
         var that = this;
         renderStylesheet();
         renderJavascript();
+        renderMeta();
         if (typeof template === 'undefined') {
             template = 'index';
         }
-
+        this.res.status(_status);
         this.res.render('themes/' + _name + '/' + template, _data);
     };
 }
