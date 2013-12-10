@@ -1,7 +1,7 @@
 {
   "name": "express-theme",
   "version": "0.0.1",
-  "description": "express.js theming made easy",
+  "description": "express.js middleware for theming",
   "main": "theme.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
