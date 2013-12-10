@@ -1,4 +1,9 @@
-express-theme
+Introduction Express-Theme
 =============
 
-express.js theming made easy
+**express-theme** is middleware for express.js that aim to creating theme for express.js
+
+# Install #
+
+	npm install express-theme
+
