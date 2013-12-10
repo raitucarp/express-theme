@@ -448,6 +448,40 @@ function Theme(name) {
         return this;
     };
 
+    this.robots = function () {
+        var name = 'robots', prop = arguments[0];
+        if (typeof arguments[0] === 'string') {
+            name = arguments[0];
+            prop = arguments[1];
+        }
+        var index = 'index', follow = 'follow', content = [];
+
+        if (typeof prop.index !== 'undefined') {
+            if (prop.index === 0) {
+                index = 'noindex';
+            }
+        }
+        content.push(index);
+
+        if (typeof prop.follow !== 'undefined') {
+            if (prop.follow === 0) {
+                follow = 'nofollow';
+            }
+        }
+        content.push(follow);
+        for (var i in prop) {
+            if (prop.hasOwnProperty(i)) {
+                if (i !== 'index' && i !== 'follow') {
+                    if (prop[i] === 1) {
+                        content.push(i);
+                    }
+                }
+            }
+        }
+        _meta.push({name: name, content: content.join(', ') });
+        return this;
+    };
+
     var renderStylesheet = function () {
         var i;
         for (i in _css) {
