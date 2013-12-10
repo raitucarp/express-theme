@@ -267,47 +267,166 @@ function Theme(name) {
         if (arguments.length === 2) {
             var type = arguments[0], 
                 options = arguments[1];
-
-            if (typeof options.site === 'undefined') {
-                throw new Error('No site');
-            }
-
-            var site = options.site.replace('@', '');
-
+            var i;
             switch (type) {
                 case 'summary':
                     _twitter_cards = {
                         card: type,
-                        site: '@' + site,
+                        site: '@' + options.site.replace('@', ''),
                         creator: '@' + options.creator.replace('@', ''),
                         title: options.title,
                         description: options.description
                     };
+                    for (i in _twitter_cards) {
+                        _meta.push({name: 'twitter:' + i, content: _twitter_cards[i]});
+                    }
+                    if (typeof options.image !== 'undefined') {
+                        _meta.push({name: 'twitter:image', content: options.image});
+                    }
                 break;
                 case 'summary_large_image':
                     _twitter_cards = {
                         card: type,
-                        site: '@' + site,
+                        site: '@' + options.site.replace('@', ''),
                         creator: '@' + options.creator.replace('@', ''),
                         title: options.title,
                         description: options.description,
-                        'img.src' : options.img_src
+                        /*image : {
+                            src: options.img_src
+                        }*/
                     };
+                    for (i in _twitter_cards) {
+                        _meta.push({name: 'twitter:' + i, content: _twitter_cards[i]});
+                    }
+                    if (typeof options.image_src !== 'undefined') {
+                        _meta.push({name: 'twitter:image:src', content: options.image_src});
+                    }
                 break;
                 case 'photo':
-                    
+                    _twitter_cards = {
+                        card: type,
+                        site: '@' + options.site.replace('@', ''),
+                        creator: '@' + options.creator.replace('@', ''),
+                    };
+
+                    for (i in _twitter_cards) {
+                        _meta.push({name: 'twitter:' + i, content: _twitter_cards[i]});
+                    }
+
+                    if (typeof options.title !== 'undefined') {
+                        _meta.push({name: 'twitter:title', content: options.title});
+                    }
+
+                    _meta.push({name: 'twitter:image', content: options.image.content});
+
+                    for (i in options.image) {
+                        if (i !== 'content') {
+                            _meta.push({name: 'twitter:image:' + i, content: options.image[i]});
+                        }
+                    }
                 break;
                 case 'gallery':
+                    _twitter_cards = {
+                        card: type,
+                        site: '@' + options.site.replace('@', ''),
+                        creator: '@' + options.creator.replace('@', ''),
+                    };
 
+                    if (typeof options.title !== 'undefined') {
+                        _twitter_cards.title = options.title;
+                    }
+
+                    if (typeof options.description !== 'undefined') {
+                        _twitter_cards.description = options.description;
+                    }
+
+                    for (i in _twitter_cards) {
+                        _meta.push({name: 'twitter:' + i, content: _twitter_cards[i]});
+                    }
+                    options.images.forEach(function (img, index) {
+                        _meta.push({name: 'twitter:image' + index, content: img});
+                    });
                 break;
                 case 'app':
+                    _twitter_cards = {
+                        card: type,
+                    };
 
+                    if (typeof options.description !== 'undefined') {
+                        _twitter_cards.description = options.description;
+                    }
+
+                    for (i in _twitter_cards) {
+                        _meta.push({name: 'twitter:' + i, content: _twitter_cards[i]});
+                    }
+
+                    _meta.push({name: 'twitter:app:id:iphone', content: options.iphone.id});
+                    _meta.push({name: 'twitter:app:id:ipad', content: options.ipad.id});
+                    _meta.push({name: 'twitter:app:id:googleplay', content: options.googleplay.id});
+
+                    if (typeof options.iphone.url !== 'undefined') {
+                        _meta.push({name: 'twitter:app:url:iphone', content: options.iphone.url });
+                    }
+
+                    if (typeof options.ipad.name !== 'undefined') {
+                        _meta.push({name: 'twitter:app:name:ipad', content: options.ipad.name});
+                    }
+
+                    if (typeof options.ipad.url !== 'undefined') {
+                        _meta.push({name: 'twitter:app:url:ipad', content: options.ipad.url});
+                    }
+
+                    if (typeof options.googleplay.url !== 'undefined') {
+                        _meta.push({name: 'twitter:app:url:googleplay', content: options.googleplay.url});
+                    }
+
+                    if (typeof options.country !== 'undefined') {
+                        _meta.push({name: 'twitter:app:country', content: options.googleplay.url});
+                    }
                 break;
                 case 'player':
+                    _twitter_cards = {
+                        card: type,
+                        title: options.title,
+                        description: options.description,
+                    };
 
+                    for (i in _twitter_cards) {
+                        _meta.push({name: 'twitter:' + i, content: _twitter_cards[i]});
+                    }
+                    _meta.push({name: 'twitter:player', content: options.player.content});
+                    for (i in options.player) {
+                        if (i !== 'content' && i !== 'stream') {
+                            _meta.push({name: 'twitter:player:' + i, content: options.player[i]});
+                        }
+                    }
+                    if (typeof options.player.stream !== 'undefined') {
+                        _meta.push({name: 'twitter:player:stream', content: options.player.stream.content});
+                        _meta.push({name: 'twitter:player:stream:content_type', content: options.player.stream.content_type});
+                    }
                 break;
                 case 'product':
+                    _twitter_cards = {
+                        card: type,
+                        title: options.title,
+                        description: options.description,
+                        image: options.image.content
+                    };
 
+                    for (i in _twitter_cards) {
+                        _meta.push({name: 'twitter:' + i, content: _twitter_cards[i]});
+                    }
+
+                    for (i in options.image) {
+                        if (i !== 'content') {
+                            _meta.push({name: 'twitter:image:' + i, content: options.image[i]});
+                        }
+                    }
+
+                    options.data.forEach(function (data, index) {
+                        _meta.push({name: 'twitter:data'+ (index + 1), content: data.value});
+                        _meta.push({name: 'twitter:label'+ (index + 1), content: data.label});
+                    });
                 break;
             }
         }
@@ -372,7 +491,6 @@ function Theme(name) {
         _meta.forEach(function (meta, index) {
             var attrs = '';
             for (var i in meta) {
-                console.log(i);
                 if (meta.hasOwnProperty(i)) {
                     attrs += i + '="' + meta[i].toString() + '" ';
                 }
