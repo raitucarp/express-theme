@@ -203,8 +203,8 @@ function Theme(name) {
         return this;
     };
 
-    this.title = function (title) {
-        _data.title = title;
+    this.title = function (siteTitle) {
+        _data.title = siteTitle;
         return this;
     };
 
