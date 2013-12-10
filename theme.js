@@ -438,6 +438,16 @@ function Theme(name) {
         return this;
     };
 
+    this.headerScript = function (script) {
+        _data.headerScript += script;
+        return this;
+    };
+
+    this.footerScript = function (script) {
+        _data.footerScript += script;
+        return this;
+    };
+
     var renderStylesheet = function () {
         var i;
         for (i in _css) {
