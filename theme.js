@@ -612,7 +612,7 @@ var themeModule = function (name) {
     };
 };
 
-themeModule.error = function (env){
+themeModule.error = function (env) {
     return function (err, req, res, next) {
         var data = {error: ''};
         if (env === 'dev') {
@@ -620,6 +620,13 @@ themeModule.error = function (env){
         }
         res.status(500);
         res.render('themes/' + res.theme.getName() +'/500', data);
+    };
+};
+
+themeModule.notfound = function () {
+    return function (req, res, next) {
+        res.status(404);
+        res.render('themes/' + res.theme.getName() +'/404');
     };
 };
 
