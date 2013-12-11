@@ -158,6 +158,12 @@ function Theme(name) {
             argumentsLength = argumentsLength - 1;
         }
 
+        if (options.q !== false) {
+            if (typeof options.q === 'object') {
+                query = options.q;
+            }
+        }
+
         if (argumentsLength > 1) {
             for (i in arguments) {
                 if (arguments.hasOwnProperty(i)) {
@@ -540,7 +546,7 @@ function Theme(name) {
         for (i in _js) {
             if (_js.hasOwnProperty(i)) {
                 var js = _js[i], href, query;
-                
+
                 if (js.external === false) {
                     href = "/" + name + '/js/' + js.name + '.js';
                 } else {
