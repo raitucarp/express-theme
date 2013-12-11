@@ -49,8 +49,8 @@ What is that files purposes?
 
 - **505.ejs** is error handling, maybe your code error and for production you may not want print something ugly rather than your beautiful theme
 - **404.ejs** is handle 404 not found, when user mistype url on your site, default express produce ugly not found page. So it's now your chance to beautify your not found page
-- **index.ejs**, actually that is default files, it is optional. You can create your header.ejs or footer.ejs, and page.ejs as you want.
-- **screenshot.png** is future use, this files is for my upcoming projects. express-theme marketplace. 
+- **index.ejs**, actually this is default file, it is optional. You can create your header.ejs or footer.ejs, and page.ejs as you want.
+- **screenshot.png** is future use, this file is for my upcoming projects. express-theme marketplace. 
 - **package.json** is your theme description. this is also future use, but it is required file, not optional.
 
 #### What is inside package.json? ####
@@ -65,7 +65,7 @@ What is that files purposes?
 - author: your name
 - description: description of your theme
 
-#### Now, it's time move to router ####
+#### Now, it's time to move on to router ####
 
 I use index.js as example:
 
@@ -140,14 +140,35 @@ It will render:
 	  </body>
 	</html>
 
+
+*getter*
+
+**theme.change(themeName)**
+
+change your theme directly in your router. 
+
+	theme.change('v2')
+
+**theme.getName()**
+
+get your theme name
+
+	theme.getName()
+
+**theme.getInfo()**
+
+get info from package.json
+
+	theme.getInfo()
+
 *All methods are chainable except load*
 
-### theme.title(pageTitle) ###
+**theme.title(pageTitle)**
 
 It is your site title, and will render as ```<%= title %>```. for example:
 	theme.title("This is about page")
 
-### theme.data(key, value) ###
+**theme.data(key, value)**
 
 Add data to your views, key is string, and value is mixed type. for example: 
 
@@ -159,7 +180,7 @@ In your views file you can print it directly as your key name. for example:
 	
 	<%= mydata %> has age: <%= age %>
 
-### theme.data(object) ###
+**theme.data(object)**
 
 Same as default data method, but use object rather than key value. for example:
 
@@ -172,9 +193,9 @@ In your views files you can print it directly as your key name in object. exampl
 
 	<%= mydata %> has age: <%= age %>
 
-### theme.css(csslist, [options]) ###
+**theme.css(csslist, [options])**
 
-add css to your theme, ``` csslist ``` is string. for example:
+add css to your page, ``` csslist ``` is string. for example:
 
 	theme.css('bootstrap, style, v2')
 
@@ -194,4 +215,143 @@ Options are optional, contains:
 - alternate
 - query
 
-### theme.css(css1, css2, css3, ..., cssn, options) ###
+for example: 
+	
+	theme.css('for_print', { media: 'print'})
+		 .css('a, b', {alternate: true})
+		 .css('c', {q: {v: '2'}})
+
+it will print:
+
+	<link rel="stylesheet" media="print" href="/v1/css/for_print.css" />
+	<link rel="alternate stylesheet" href="/v1/css/a.css" />
+	<link rel="alternate stylesheet" href="/v1/css/b.css" />
+	<link rel="stylesheet" href="/v1/css/c.css?v=2" />
+
+**theme.css(css1, css2, css3, ..., cssn, options)**
+
+Same as above method, the different is it takes argument rather than string separated with commas
+
+*Note that: css1, css2, .. cssn can take url as input*
+
+	theme.css('http://dc8hdnsmzapvm.cloudfront.net/assets/styles/application.css', {q: {'87923645ca2ae626bb841ec75bddeb8c': ''}})
+
+result
+
+	<link rel="stylesheet" href="http://dc8hdnsmzapvm.cloudfront.net/assets/styles/application.css?87923645ca2ae626bb841ec75bddeb8c" />
+
+**theme.js(jslist, [options])**
+
+add javascript to your page.
+
+	theme.js('jquery, bootstrap, underscore')
+
+In your views:
+
+	<%- javascript %>
+
+will print
+
+	<script href="/v1/js/jquery.js"></script>
+	<script href="/v1/js/bootstrap.js"></script>
+	<script href="/v1/js/underscore.js"></script>
+
+options is optional, only accept q
+
+	theme.js('baba,yaya,dede', {q: {v: 3}})
+
+result:
+
+	<script href="/v1/js/baba.js?v=3"></script>
+	<script href="/v1/js/yaya.js?v=3"></script>
+	<script href="/v1/js/dede.js?v=3"></script>
+
+js list could be array
+
+	theme.js(['bootstrap', 'underscore'])
+
+
+**theme.js(external_js1, external_js2, ..., external_jsn, [options])**
+
+Same as above, but it takes url as parameter
+
+**theme.meta(name, content)**
+
+add meta tags to your page
+
+	theme.meta('description', 'this is cool website')
+		 .meta('keywords', 'cool, javascript awesome, good')
+
+In your views:
+
+	<%- meta %>
+
+result:
+
+	<meta name="description" content="this is cool website" />
+	<meta name="keywords" content="cool, javascript awesome, good" />
+
+**theme.meta(object)**
+
+	theme.meta({ name: 'keywords', content: 'my_keywords'})
+		 .meta({ http-equiv: 'refresh', content: '30'})
+
+result
+
+	<meta name="keywords" content="my_keywords" />
+	<meta http-equiv="refresh" content="30" />
+	
+**theme.robots([name], options)**
+
+as name is optional, if you don't describe which robots, it will take default name "robots". And when you set robots name, example 'googlebot' it will print as you wish
+
+	theme.robots({
+            	index: 1,
+            	follow: 0
+      		})
+        	.robots('googlebot', {
+            	index: 1,
+            	noodp: 1,            
+        	})
+
+result
+
+	<meta name="robots" content="index, nofollow" />
+	<meta name="googlebot" content="index, follow, noodp" />
+
+default options are:
+
+- index
+- follow
+- noodp
+- noarchive
+- etc. you can read more [https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag ](https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag)
+
+when you set index with 1, it will print index, otherwise it will print noindex. same as follow, when you print follow:0 it will print nofollow, moreover will print follow
+
+for more information about robots meta tags you can read it here: [http://www.robotstxt.org/meta.html](http://www.robotstxt.org/meta.html)
+
+**theme.headerScript(script)**
+
+add script to your header, maybe analytics code or whatever do you want
+
+	theme.headerScript('<script>console.log("a");</script>')
+
+In your views:
+
+	<%- headerScript %>
+
+result:
+
+	<script>console.log("a");</script>
+
+tips. make sure that you put it in header tag
+
+
+**theme.footerScript()**
+
+add script to your header
+
+	theme.footerScript('<script>console.log("this is footer");</script>')
+
+tips. make sure that you put it in very bottom page
