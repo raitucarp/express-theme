@@ -355,3 +355,92 @@ add script to your header
 	theme.footerScript('<script>console.log("this is footer");</script>')
 
 tips. make sure that you put it in very bottom page
+
+## Social Media##
+
+This is advance usage. If you don't know what you do, please read this two documentation:
+
+- [http://ogp.me/](http://ogp.me/)
+- [https://dev.twitter.com/docs/cards](https://dev.twitter.com/docs/cards)
+
+### Facebook Opengraph ###
+
+facebook opengraph is special meta tags for facebook. Make sure you define the namespace before go deeper:
+
+#### theme.opengraph('namespace', type)####
+
+there are several types of namespace, you should choose one:
+	
+1. music
+2. video
+3. article
+4. book
+5. profile
+6. website
+7. custom
+
+place your namespace as attribute of html tag
+
+	<html <%-og_namespace%>>
+
+**theme.opengraph('namespace', 'music')**
+
+result: ```<html prefix="og: http://ogp.me/ns/music#">```
+
+**theme.opengraph('namespace', 'video')**
+
+result: ```<html prefix="og: http://ogp.me/ns/video#">```
+
+**theme.opengraph('namespace', 'article')**
+	
+result: ```<html prefix="og: http://ogp.me/ns/article#">```
+
+**theme.opengraph('namespace', 'book')**
+
+result: ```<html prefix="og: http://ogp.me/ns/book#">```
+
+**theme.opengraph('namespace', 'profile')**
+
+result: ```<html prefix="og: http://ogp.me/ns/profile#">```
+
+**theme.opengraph('namespace', 'website')**
+
+result: ```<html prefix="og: http://ogp.me/ns/website#">```
+
+**theme.opengraph('namespace', 'custom', {namespace: ns, url: yoursite})**
+
+custom namespace should have namespace and url, for example:
+
+	theme.opengraph('namespace', 'custom', {
+			 	namespace: 'my_namespace', 
+				url: 'http://example.com'
+		  })
+
+result:
+
+	<html prefix="my_namespace: http://example.com/ns#">
+
+#### theme.opengraph(property, value)####
+
+	theme.opengraph('title', "The Rock")
+         .opengraph('type', 'video.movie')
+         .opengraph('url', 'http://www.imdb.com/title/tt0117500/')
+         .opengraph('image', "http://ia.media-imdb.com/images/rock.jpg", {
+            secure_url: 'https://secure.example.com/ogp.jpg',
+            type: 'image/jpeg',
+            width: '400',
+            height: '300'
+         })
+
+value can be as object, it will print:
+
+	<meta property="og:title" content="The Rock" />
+	<meta property="og:type" content="video.movie" />
+	<meta property="og:url" content="http://www.imdb.com/title/tt0117500/" />
+	<meta property="og:image" content="http://ia.media-imdb.com/images/rock.jpg" />
+	<meta property="og:image:secure_url" content="https://secure.example.com/ogp.jpg" />
+	<meta property="og:image:type" content="image/jpeg" />
+	<meta property="og:image:width" content="400" />
+	<meta property="og:image:height" content="300" />
+
+Please read official documentation of facebook opengraph, and open issue when you find a bug.
