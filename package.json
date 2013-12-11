@@ -1,6 +1,6 @@
 {
   "name": "express-theme",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "express-theme is express.js middleware that aim to create structured and simple theme very easily",
   "main": "theme.js",
   "scripts": {
