@@ -446,23 +446,33 @@ function Theme(name) {
                         card: type,
                         title: options.title,
                         description: options.description,
-                        image: options.image.content
                     };
 
                     for (i in _twitter_cards) {
                         _meta.push({name: 'twitter:' + i, content: _twitter_cards[i]});
                     }
 
-                    for (i in options.image) {
-                        if (i !== 'content') {
-                            _meta.push({name: 'twitter:image:' + i, content: options.image[i]});
+                    if (typeof options.image === 'string') {
+                        _meta.push({name: 'twitter:image' , content: options.image});
+                    } else {
+                        _meta.push({name: 'twitter:image' , content: options.image.content});
+                        for (i in options.image) {
+                            if (i !== 'content') {
+                                _meta.push({name: 'twitter:image:' + i, content: options.image[i]});
+                            }
                         }
                     }
 
-                    options.data.forEach(function (data, index) {
-                        _meta.push({name: 'twitter:data'+ (index + 1), content: data.value});
-                        _meta.push({name: 'twitter:label'+ (index + 1), content: data.label});
-                    });
+                    //console.log(options.data);
+
+                    var c = 0;
+                    for (i in options.data) {
+                        if (options.data.hasOwnProperty(i)) {
+                            _meta.push({name: 'twitter:data'+ (c + 1), content: options.data[i]});
+                            _meta.push({name: 'twitter:label'+ (c+ 1), content: i});
+                            c++;
+                        }
+                    }
                 break;
             }
         }
