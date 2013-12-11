@@ -395,7 +395,9 @@ function Theme(name) {
                     }
 
                     _meta.push({name: 'twitter:app:id:iphone', content: options.iphone.id});
-                    _meta.push({name: 'twitter:app:id:ipad', content: options.ipad.id});
+                    if (typeof options.ipad.id !== 'undefined') {
+                        _meta.push({name: 'twitter:app:id:ipad', content: options.ipad.id});
+                    }
                     _meta.push({name: 'twitter:app:id:googleplay', content: options.googleplay.id});
 
                     if (typeof options.iphone.url !== 'undefined') {
