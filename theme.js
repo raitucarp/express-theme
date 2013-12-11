@@ -415,7 +415,7 @@ function Theme(name) {
                     }
 
                     if (typeof options.country !== 'undefined') {
-                        _meta.push({name: 'twitter:app:country', content: options.googleplay.url});
+                        _meta.push({name: 'twitter:app:country', content: options.country});
                     }
                 break;
                 case 'player':
