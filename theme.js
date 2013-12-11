@@ -270,6 +270,9 @@ function Theme(name) {
                         case 'profile':
                             ns += '/profile#';
                         break;
+                        case 'website':
+                            ns += '/website#';
+                        break;
                         case 'custom': 
                             og = arguments[2].namespace + ': ';
                             ns = arguments[2].url + '/ns#';
