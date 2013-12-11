@@ -363,6 +363,8 @@ This is advance usage. If you don't know what you do, please read this two docum
 - [http://ogp.me/](http://ogp.me/)
 - [https://dev.twitter.com/docs/cards](https://dev.twitter.com/docs/cards)
 
+Please note that social media meta tags is part of ```<%- meta -%>``` variable.
+
 ### Facebook Opengraph ###
 
 facebook opengraph is special meta tags for facebook. Make sure you define the namespace before go deeper:
@@ -444,3 +446,212 @@ value can be as object, it will print:
 	<meta property="og:image:height" content="300" />
 
 Please read official documentation of facebook opengraph, and open issue when you find a bug.
+
+### Twitter Cards ###
+
+Official documentation at [https://dev.twitter.com/docs/cards](https://dev.twitter.com/docs/cards)
+
+Express-theme only support these cards:
+
+- **Summary Card**: Default Card, including a title, description, thumbnail, and Twitter account attribution.
+- **Summary Card with Large Image**: Similar to a Summary Card, but offers the ability to prominently feature an image.
+- **Photo Card**: A Tweet sized photo Card.
+- **Gallery Card**: A Tweet Card geared toward highlighting a collection of photos.
+- **App Card**: A Tweet Card for providing a profile of an application.
+- **Player Card**: A Tweet sized video/audio/media player Card.
+- **Product Card**: A Tweet Card to better represent product content.
+
+*Please note that, you only can call this method once, if you call again then the last method will replace the previous*
+
+#### Summary cards ####
+
+this code:
+
+	theme.twitter_cards('summary', {
+            site: '@nytimes',
+            creator: '@SarahMaslinNir',
+            title: 'Parade of Fans for Houston’s Funeral',
+            description: 'NEWARK - The guest list and parade of limousines with celebrities emerging from them seemed more suited to a red carpet event in Hollywood or New York than than a gritty stretch of Sussex Avenue near the former site of the James M. Baxter Terrace public housing project here.',
+            image: 'http://graphics8.nytimes.com/images/2012/02/19/us/19whitney-span/19whitney-span-article.jpg'
+        })
+
+will print this:
+
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:site" content="@nytimes" />
+	<meta name="twitter:creator" content="@SarahMaslinNir" />
+	<meta name="twitter:title" content="Parade of Fans for Houston’s Funeral" />
+	<meta name="twitter:description" content="NEWARK - The guest list and parade of limousines with celebrities emerging from them seemed more suited to a red carpet event in Hollywood or New York than than a gritty stretch of Sussex Avenue near the former site of the James M. Baxter Terrace public housing project here." />
+	<meta name="twitter:image" content="http://graphics8.nytimes.com/images/2012/02/19/us/19whitney-span/19whitney-span-article.jpg" />
+
+#### Summary Card with Large Image ####
+
+	theme.twitter_cards('summary_large_image', {
+            site: '@nytimes',
+            creator: '@SarahMaslinNir',
+            title: 'Parade of Fans for Houston’s Funeral',
+            description: 'NEWARK - The guest list and parade of limousines with celebrities emerging from them seemed more suited to a red carpet event in Hollywood or New York than than a gritty stretch of Sussex Avenue near the former site of the James M. Baxter Terrace public housing project here.',
+            image_src: 'http://graphics8.nytimes.com/images/2012/02/19/us/19whitney-span/19whitney-span-article.jpg'
+        })
+
+result:
+
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content="@nytimes" />
+	<meta name="twitter:creator" content="@SarahMaslinNir" />
+	<meta name="twitter:title" content="Parade of Fans for Houston’s Funeral" />
+	<meta name="twitter:description" content="NEWARK - The guest list and parade of limousines with celebrities emerging from them seemed more suited to a red carpet event in Hollywood or New York than than a gritty stretch of Sussex Avenue near the former site of the James M. Baxter Terrace public housing project here." />
+	<meta name="twitter:image:src" content="http://graphics8.nytimes.com/images/2012/02/19/us/19whitney-span/19whitney-span-article.jpg" />
+
+#### Photo Card ####
+
+	theme.twitter_cards('photo', {
+            site: '@examplephotosite',
+            creator: '@sippey',
+            title: 'Parade of Fans for Houston’s Funeral',
+            image: {
+                content: 'http://example.com/photo/a/image.jpg',
+                height: 610,
+                width: 610
+            }
+        })
+
+result: 
+
+	<meta name="twitter:card" content="photo">
+	<meta name="twitter:site" content="@examplephotosite">
+	<meta name="twitter:creator" content="@sippey">
+	<meta name="twitter:title" content="Good Morning, San Francisco">
+	<meta name="twitter:image" content="http://example.com/photo/a/image.jpg">
+	<meta name="twitter:image:width" content="610">
+	<meta name="twitter:image:height" content="610">
+
+### Gallery Card ###
+
+	.twitter_cards('gallery', {
+            site: '@flickr',
+            creator: '@hackweek',
+            title: 'Hack week',
+            description: 'A look at Hack Week at Twitter HQ (@twoffice) and all of our offices around the world',
+            images: [
+                'http://farm9.staticflickr.com/8236/8383176221_44f50afaba_b.jpg',
+                'http://farm9.staticflickr.com/8186/8393798794_3a3d27a621_c.jpg',
+                'http://farm9.staticflickr.com/8189/8384260164_511782a797_c.jpg',
+                'http://farm9.staticflickr.com/8188/8383177259_f927f13d81_b.jpg'
+            ]
+        })
+
+result :
+
+	<meta name="twitter:card" content="gallery">
+	<meta name="twitter:site" content="@flickr">
+	<meta name="twitter:creator" content="@hackweek">
+	<meta name="twitter:title" content="Hack Week">
+	<meta name="twitter:description" content="A look at Hack Week at Twitter HQ (@twoffice) and all of our offices around the world.">
+	<meta name="twitter:image0" content="http://farm9.staticflickr.com/8236/8383176221_44f50afaba_b.jpg">
+	<meta name="twitter:image1" content="http://farm9.staticflickr.com/8186/8393798794_3a3d27a621_c.jpg">
+	<meta name="twitter:image2" content="http://farm9.staticflickr.com/8189/8384260164_511782a797_c.jpg">
+	<meta name="twitter:image3" content="http://farm9.staticflickr.com/8188/8383177259_f927f13d81_b.jpg">
+
+#### App Card ####
+
+	theme.twitter_cards('app', {
+            description: 'The perfect for grabbing a nearby taxi. Try it by downloading today.',
+            iphone: {
+                id: 306934135,
+                url: 'example://action/5149e249222f9e600a7540ef',
+            },
+            ipad: {
+                name: 'Example App',
+                url: 'example://action/5149e249222f9e600a7540ef'
+            },
+            googleplay: {
+                id: 'com.example.app',
+                url: 'http://example.com/action/5149e249222f9e600a7540ef'
+            }
+        })
+
+result
+
+	<meta name="twitter:card" content="app">
+	<meta name="twitter:description" content="The perfect for grabbing a nearby taxi. Try it by downloading today.">
+	<meta name="twitter:app:id:iphone" content="306934135">
+	<meta name="twitter:app:url:iphone" content="example://action/5149e249222f9e600a7540ef">
+	<meta name="twitter:app:name:ipad" content="Example App">
+	<meta name="twitter:app:url:ipad" content="example://action/5149e249222f9e600a7540ef">
+	<meta name="twitter:app:id:googleplay" content="com.example.app">
+	<meta name="twitter:app:url:googleplay" content="http://example.com/action/5149e249222f9e600a7540ef">
+
+#### Player Card ####
+
+	theme.twitter_cards('player', {
+        site: '@examplevideosite',
+        title: 'Example Video',
+        description: 'This is a sample video from example.com',
+        image: "https://example.com/keyframe/a.jpg",
+        player: {
+            content: 'https://example.com/embed/a',
+            width: 435,
+            height: 251
+        }
+    })
+
+result
+
+	<meta name="twitter:card" content="player" />
+	<meta name="twitter:title" content="Example Video" />
+	<meta name="twitter:description" content="This is a sample video from example.com" />
+	<meta name="twitter:player" content="https://example.com/embed/a" />
+	<meta name="twitter:player:width" content="435" />
+	<meta name="twitter:player:height" content="251" />
+
+#### Product Card ####
+
+	theme.twitter_cards('product', {
+            site: '@twitter',
+            creator: '@twitter',
+            title: 'Logo Mug',
+            description: 'The perfect pick-me-up. Enjoy your favorite blend with this coffee mug featuring the Twitter logo. Make every work day good to the last drop.',
+            image: "https://twitter.siglercompanies.com/graphics/00000001/mug-new.jpg",
+            data: {
+                Price: '$3',
+                Color: 'Black'
+            }
+        })
+
+result
+
+	<meta name="twitter:card" content="product">
+	<meta name="twitter:site" content="@twitter">
+	<meta name="twitter:creator" content="@twitter">
+	<meta name="twitter:title" content="Logo Mug">
+	<meta name="twitter:description" content="The perfect pick-me-up. Enjoy your favorite blend with this coffee mug featuring the Twitter logo. Make every work day good to the last drop.">
+	<meta name="twitter:image" content="https://twitter.siglercompanies.com/graphics/00000001/mug-new.jpg">
+	<meta name="twitter:data1" content="$3">
+	<meta name="twitter:label1" content="Price">
+	<meta name="twitter:data2" content="Black">
+	<meta name="twitter:label2" content="Color">
+
+# License #
+
+The MIT License (MIT)
+
+Copyright (c) 2013 Ribhararnus Pracutiar
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
