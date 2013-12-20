@@ -572,7 +572,7 @@ function Theme(name) {
                 if (query !== '') {
                     href = href + '?' + query;
                 }
-                _data.javascript += '<script href="'+ href +'"></script>\n';
+                _data.javascript += '<script src="'+ href +'"></script>\n';
             }
         }
     };
