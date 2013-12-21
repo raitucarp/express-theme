@@ -463,8 +463,6 @@ function Theme(name) {
                         }
                     }
 
-                    //console.log(options.data);
-
                     var c = 0;
                     for (i in options.data) {
                         if (options.data.hasOwnProperty(i)) {
@@ -614,14 +612,6 @@ Theme.prototype.getInfo = function () {
     return fs.readFileSync(path.resolve(this.res.app.get('views'), 'themes', this.name, 'package.json'), 'utf8');
 };
 
-/*Theme.prototype.title = function (title) {
-    this.title = title;
-};
-
-/*Theme.prototype.css = function () {
-    
-};*/
-
 var themeModule = function (name) {
     this.name = name;
     return function (req, res, next) {
@@ -633,22 +623,12 @@ var themeModule = function (name) {
     };
 };
 
-themeModule.error = function (env) {
-    return function (err, req, res, next) {
-        var data = {error: ''};
-        if (env === 'dev') {
-            data.error = err.stack;
-        }
-        res.status(500);
-        res.render('themes/' + res.theme.getName() +'/500', data);
-    };
+themeModule.error = function (router) {
+    return router;
 };
 
-themeModule.notfound = function () {
-    return function (req, res, next) {
-        res.status(404);
-        res.render('themes/' + res.theme.getName() +'/404');
-    };
+themeModule.notFound = function (router) {
+    return router;
 };
 
 module.exports = themeModule;
