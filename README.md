@@ -1,7 +1,7 @@
 Introduction Express-Theme
 =============
 
-**express-theme** is express.js middleware that aim to create structured and simple theme very easily. In the future, I will create market for express-themes. All people can upload their themes to the market, and developer-user can install easily for their projects.
+**express-theme** is express.js middleware that aims to create structured and simple theme very easily. In the future, I will create market for express-themes. All people can upload their themes to the market, and developer-user can install easily for their projects.
 
 # Install #
 
@@ -20,8 +20,8 @@ Introduction Express-Theme
 		app.use('v1'); // v1 is theme name, see details below
 		app.use(app.router);
 		app.use(express.static(path.join(__dirname, 'public')));
-    	app.use(theme.error('dev')); // handle error
-		app.use(theme.notfound());  // 404 not found
+    	app.use(theme.error(routes.errorHandler)); // handle error
+		app.use(theme.notFound(routes.notFound));  // 404 not found
 	});
 
 #### Create themes dir under your views: ####
@@ -162,6 +162,12 @@ get info from package.json
 	theme.getInfo()
 
 *All methods are chainable except load*
+
+**theme.status(statusCode)**
+
+custom status code for your res, example:
+
+	theme.status(404)
 
 **theme.title(pageTitle)**
 
@@ -631,6 +637,27 @@ result
 	<meta name="twitter:label1" content="Price">
 	<meta name="twitter:data2" content="Black">
 	<meta name="twitter:label2" content="Color">
+
+
+# 500 and 404 handler #
+
+In your app configuration, you should have these, below ```app.use(app.router)```:
+
+	app.use(theme.error(routes.errorHandler)); // handle error
+	app.use(theme.notFound(routes.notFound));  // 404 not found
+
+
+Your router files (routes) must contains router for errorHandler, and notFound, the name of your route handler is up to you
+
+	exports.errorHandler (err, req, res) {
+		// do something here, maybe load theme and load 404.ejs
+	};
+
+for 404 not found:
+
+	exports.notFound (req, res) {
+		// do something here, maybe load theme and load 404.ejs
+	};
 
 # License #
 
