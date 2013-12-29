@@ -17,7 +17,7 @@ Introduction Express-Theme
 
 	app.configure(function () {
 		// ...
-		app.use('v1'); // v1 is theme name, see details below
+		app.use(theme('v1')); // v1 is theme name, see details below
 		app.use(app.router);
 		app.use(express.static(path.join(__dirname, 'public')));
     	app.use(theme.error(routes.errorHandler)); // handle error
